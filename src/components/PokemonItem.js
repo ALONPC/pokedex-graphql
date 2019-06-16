@@ -1,40 +1,33 @@
 import React from "react";
+import PokemonTypes from "./PokemonTypes";
+import PokemonHeader from "./PokemonHeader";
+
 import styles from "./styles.css";
+import PokemonSprites from "./PokemonSprites";
 
 const PokemonItem = props => {
   const { pokemon } = props;
-  console.log("TCL: pokemon", pokemon);
+  console.log("Pokemon", pokemon);
   return (
     <>
-      <div className="card text-white bg-primary mb-3 col-md-12">
-        <h3 className="card-header capitalize">
-          {`#${pokemon.id} ${pokemon.name}`}
-        </h3>
-        <div className="card-body">
+      <div className="card text-white bg-seondary mb-3 col-md-6">
+        <div className="card-header">
           <div className="row">
-            <div className="col" align="center">
-              <img
-                className="img-fluid"
-                src={pokemon.sprites.front_default}
-                alt={`${pokemon.name}.jpg`}
-              />
+            <div className="col-md-6">
+              <PokemonHeader id={pokemon.id} name={pokemon.name} />
             </div>
-            <div className="col" align="center">
-              <img
-                className="img-fluid"
-                src={pokemon.sprites.back_default}
-                alt={`${pokemon.name}.jpg`}
-              />
+            <div className="col-md-6">
+              <PokemonTypes types={pokemon.types} />
             </div>
           </div>
-          {/* <div className="row">
-            <h6 className="col-sm-3" align="center">
-              Height: {pokemon.height}
-            </h6>
-            <h6 className="col-sm-3" align="center">
-              Weight: {pokemon.weight}
-            </h6>
-          </div> */}
+        </div>
+
+        <div className="card-body">
+          <div className="row">
+            <div className="col-md-12 text-center">
+              <PokemonSprites sprites={pokemon.sprites} />
+            </div>
+          </div>
           <h7 className="card-subtitle text-muted">
             Height: {pokemon.height} inchs.
           </h7>
@@ -50,23 +43,28 @@ const PokemonItem = props => {
             bulk of the card's content.
           </p>
         </div>
-        <h7 className="card-title">Abilities</h7>
-        <ul className="list-group list-group-flush pokemonData">
-          {pokemon.abilities.map(ability => (
-            <li className="list-group-item capitalize">
-              {ability.ability.name}
-            </li>
-          ))}
-        </ul>
-        <div className="card-body">
-          <a href="#" className="card-link">
-            Card link
-          </a>
-          <a href="#" className="card-link">
-            Another link
-          </a>
+
+        <div className="row">
+          <div className="col-md-6">
+            <table class="table table-hover">
+              <tbody>
+                <tr class="table-active">
+                  <th scope="row">Abilities</th>
+                  {pokemon.abilities.map(ability => (
+                    <td className="list-group-item capitalize">
+                      {ability.ability.name}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {/* <div className="col-md-6">
+            
+          </div> */}
         </div>
-        <div className="card-footer text-muted">2 days ago</div>
+
+        {/* <ul className="list-group list-group-flush pokemonData" /> */}
       </div>
     </>
   );

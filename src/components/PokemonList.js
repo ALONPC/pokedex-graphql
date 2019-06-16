@@ -22,6 +22,26 @@ const getAllPokemonEntries = gql`
           name
         }
       }
+      types {
+        slot
+        type {
+          name
+          url
+        }
+      }
+      stats {
+        base_stat
+        effort
+        stat {
+          name
+        }
+      }
+      game_indices {
+        game_index
+        version {
+          name
+        }
+      }
     }
   }
 `;
@@ -29,7 +49,7 @@ const getAllPokemonEntries = gql`
 const PokemonList = () => {
   console.log(genRanges);
   return (
-    <Query query={getAllPokemonEntries} variables={{ limit: 10 }}>
+    <Query query={getAllPokemonEntries} variables={{ limit: 30 }}>
       {({ loading, error, data }) => {
         if (loading) return <h1>Loading...</h1>;
         if (error) return <h1>Error</h1>;
@@ -37,11 +57,14 @@ const PokemonList = () => {
         console.log("TCL: PokemonList -> data", data);
 
         return (
-          <>
-            {data.getAllPokemonEntries.map((pokemon, index) => {
-              return <PokemonItem key={index} pokemon={pokemon} />;
-            })}
-          </>
+          <div className="container">
+            <div className="row">
+              <h1 className="col-md-8 display-4">National Pokedex</h1>
+              {data.getAllPokemonEntries.map((pokemon, index) => {
+                return <PokemonItem key={index} pokemon={pokemon} />;
+              })}
+            </div>
+          </div>
         );
       }}
     </Query>
