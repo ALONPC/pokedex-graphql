@@ -56,6 +56,7 @@ const typeDefs = gql`
   }
   type Query {
     getPokemon(pokemonName: String!): Pokemon
+    getAllPokemon(limit: Int!): [Pokemon]
   }
 `;
 
@@ -83,6 +84,20 @@ const resolvers = {
               : console.log("An error ocurred while fetching, try again later");
             reject(err);
           });
+      });
+    },
+    getAllPokemon: async (root, args) => {
+      // const { limit } = args;
+      // return await axios.get(`${api}pokemon/?limit=${limit}`).then(res => {
+      //   console.log("TCL: res", res);
+      //   return res.data.results;
+      // });
+      const { limit } = args;
+      return new Promise((resolve, reject) => {
+        axios.get(`${api}pokemon/?limit=${limit}`).then(res => {
+          console.log("TCL: res", res);
+          return resolve(res.data.results);
+        });
       });
     }
   }

@@ -1,8 +1,8 @@
 import React from "react";
-import PokemonEntry from "./components/PokemonEntry";
+import PokemonList from "./components/PokemonList";
 
 function App() {
-  return <PokemonEntry />;
+  return <PokemonList />;
 }
 
 export default App;
