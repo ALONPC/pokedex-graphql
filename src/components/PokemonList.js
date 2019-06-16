@@ -4,10 +4,24 @@ import { Query } from "react-apollo";
 import { genRanges } from "../lib/constants";
 import PokemonItem from "../components/PokemonItem";
 
-const getAllPokemon = gql`
+const getAllPokemonEntries = gql`
   query($limit: Int!) {
-    getAllPokemon(limit: $limit) {
+    getAllPokemonEntries(limit: $limit) {
+      id
       name
+      order
+      weight
+      height
+      sprites {
+        front_default
+        back_default
+      }
+      abilities {
+        slot
+        ability {
+          name
+        }
+      }
     }
   }
 `;
@@ -15,7 +29,7 @@ const getAllPokemon = gql`
 const PokemonList = () => {
   console.log(genRanges);
   return (
-    <Query query={getAllPokemon} variables={{ limit: 151 }}>
+    <Query query={getAllPokemonEntries} variables={{ limit: 10 }}>
       {({ loading, error, data }) => {
         if (loading) return <h1>Loading...</h1>;
         if (error) return <h1>Error</h1>;
@@ -24,8 +38,8 @@ const PokemonList = () => {
 
         return (
           <>
-            {data.getAllPokemon.map((pokemon, index) => {
-              return <PokemonItem key={index} name={pokemon.name} />;
+            {data.getAllPokemonEntries.map((pokemon, index) => {
+              return <PokemonItem key={index} pokemon={pokemon} />;
             })}
           </>
         );

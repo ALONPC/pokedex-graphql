@@ -11,6 +11,7 @@ const typeDefs = gql`
     weight: Int
     height: Int
     sprites: Sprite
+    species: Species
     abilities: [Ability]
     types: [Type]
     stats: [Stat]
@@ -54,51 +55,76 @@ const typeDefs = gql`
     name: String
     url: String
   }
+  type Species {
+    url: String
+    description: SpeciesData
+  }
+  type SpeciesData {
+    description: String
+  }
   type Query {
     getPokemon(pokemonName: String!): Pokemon
     getAllPokemon(limit: Int!): [Pokemon]
+    getAllPokemonEntries(limit: Int!): [Pokemon]
   }
 `;
 
 const resolvers = {
   Query: {
-    getPokemon: (root, args) => {
+    getPokemon: async (root, args) => {
       const { pokemonName } = args;
       let formattedPokemonName = pokemonName;
       if (pokemonName[0] === pokemonName[0].toUpperCase()) {
         formattedPokemonName = pokemonName.toLowerCase();
       }
-      return new Promise((resolve, reject) => {
-        axios
-          .get(`${api}pokemon/${formattedPokemonName}`)
-          .then(res => {
-            console.log("POKEMON:", res);
-            resolve(res.data);
-          })
-          .catch(err => {
-            console.log("ERROR:", err);
-            err.response.status == 404
-              ? console.log(
-                  "Pokemon not found in the database, check the pokemon's name and try again"
-                )
-              : console.log("An error ocurred while fetching, try again later");
-            reject(err);
-          });
-      });
+      return await axios
+        .get(`${api}pokemon/${formattedPokemonName}`)
+        .then(res => {
+          console.log("POKEMON:", res);
+          return res.data;
+        })
+        .catch(err => {
+          console.log("ERROR:", err);
+          err.response.status == 404
+            ? console.log(
+                "Pokemon not found in the database, check the pokemon's name and try again"
+              )
+            : console.log("An error ocurred while fetching, try again later");
+          throw new Error(err);
+        });
     },
     getAllPokemon: async (root, args) => {
-      // const { limit } = args;
-      // return await axios.get(`${api}pokemon/?limit=${limit}`).then(res => {
-      //   console.log("TCL: res", res);
-      //   return res.data.results;
-      // });
       const { limit } = args;
-      return new Promise((resolve, reject) => {
-        axios.get(`${api}pokemon/?limit=${limit}`).then(res => {
-          console.log("TCL: res", res);
-          return resolve(res.data.results);
-        });
+      return await axios.get(`${api}pokemon/?limit=${limit}`).then(res => {
+        console.log("TCL: res", res);
+        return res.data.results;
       });
+    },
+    getAllPokemonEntries: (root, args) => {
+      // is async await necessary here? (Query for +100 pkmn takes too long)
+      const { limit } = args;
+      let arrAllPokemon = [];
+      for (let i = 1; i < limit + 1; i++) {
+        const pokemonEntry = axios.get(`${api}pokemon/${i}`).then(res => {
+          return res.data;
+        });
+        arrAllPokemon.push(pokemonEntry);
+        console.log("TCL: arrAllPokemon", arrAllPokemon);
+      }
+
+      // arrAllPokemon.forEach(async pokemon => {
+      //   pokemon.species.data.description = "zzzz";
+      //   await axios
+      //     .get(pokemon.species.url)
+      //     .then(res => {
+      //       pokemon.species.data.description = res.data;
+      //       return res.data;
+      //     })
+      //     .catch(err => {
+      //       console.log(err);
+      //     });
+      // });
+      return arrAllPokemon;
     }
   }
 };
