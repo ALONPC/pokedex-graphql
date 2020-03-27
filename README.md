@@ -2,6 +2,9 @@ Yes, a pokedex
 
 Thanks to pokeapi.co
 
+API: https://pokeapi.co/
+UI: https://bootswatch.com/
+
 # Commands
 > npm i
 
