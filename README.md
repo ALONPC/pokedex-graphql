@@ -11,3 +11,5 @@ Yes, a pokedex
 > npm install nodemon
 
 > npm run dev
+
+WIP
