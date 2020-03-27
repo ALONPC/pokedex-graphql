@@ -1,5 +1,7 @@
 Yes, a pokedex
 
+Thanks to pokeapi.co
+
 # Commands
 > npm i
 
@@ -11,5 +13,3 @@ Yes, a pokedex
 > npm install nodemon
 
 > npm run dev
-
-WIP
